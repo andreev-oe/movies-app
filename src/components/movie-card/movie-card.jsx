@@ -1,20 +1,24 @@
 import React from 'react'
 
+import defaultPoster from '../../img/default-poster.jpg'
+const POSTER_WIDTH = 183
+const POSTER_HEIGHT = 281
+
 export default class MovieCard extends React.Component {
   constructor(props) {
     super(props)
   }
 
   render() {
-    const { overview, releaseDate, title } = this.props
+    const { overview, releaseDate, title, posterPath } = this.props
     return (
       <div className="movie-card">
         <img
           className="movie-card__poster"
-          src="https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/39da7a43-c6ff-45e1-a0d2-53a8ae43b0fb/300x450"
+          src={posterPath ? posterPath : defaultPoster}
           alt="movie"
-          width={183}
-          height={281}
+          width={POSTER_WIDTH}
+          height={POSTER_HEIGHT}
         />
         <div className="movie-card__info">
           <h2 className="movie-card__title">{title}</h2>

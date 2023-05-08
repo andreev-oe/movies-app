@@ -7,6 +7,7 @@ import TmdbApi from '../../api/tmdb-api.js'
 const MAX_OVERVIEW_LENGTH = 200
 const NO_RELEASE_DATE_TEXT = 'Release date unknown'
 const NO_OVERVIEW_TEXT = 'This movie has no description'
+const POSTER_URL = 'https://image.tmdb.org/t/p/w500'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -27,7 +28,7 @@ export default class App extends React.Component {
   }
   getMovies() {
     this.movies.getMovies('return').then((data) => {
-      data.results.forEach(({ id, overview, release_date, title }) => {
+      data.results.forEach(({ id, overview, release_date, title, poster_path }) => {
         const formattedDate = release_date ? format(new Date(release_date), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT
         this.setState(({ movies }) => {
           const movie = {
@@ -35,6 +36,7 @@ export default class App extends React.Component {
             overview: overview ? this.shortenOverview(overview) : NO_OVERVIEW_TEXT,
             releaseDate: formattedDate,
             title: title,
+            posterPath: poster_path ? `${POSTER_URL}${poster_path}` : '',
           }
           const updatedMovies = [...movies]
           updatedMovies.push(movie)
@@ -48,8 +50,10 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="movies">
-        {this.state.movies.map(({ id, overview, releaseDate, title }) => {
-          return <MovieCard key={id} overview={overview} releaseDate={releaseDate} title={title} />
+        {this.state.movies.map(({ id, overview, releaseDate, title, posterPath }) => {
+          return (
+            <MovieCard key={id} overview={overview} releaseDate={releaseDate} title={title} posterPath={posterPath} />
+          )
         })}
       </div>
     )
