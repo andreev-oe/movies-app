@@ -6,6 +6,7 @@ export default class MovieCard extends React.Component {
   }
 
   render() {
+    const { overview, releaseDate, title } = this.props
     return (
       <div className="movie-card">
         <img
@@ -16,16 +17,13 @@ export default class MovieCard extends React.Component {
           height={281}
         />
         <div className="movie-card__info">
-          <h2 className="movie-card__title">The way back</h2>
-          <p className="movie-card__date">March 5, 2020 </p>
+          <h2 className="movie-card__title">{title}</h2>
+          <p className="movie-card__date">{releaseDate}</p>
           <div className="movie-card__genres">
             <p className="movie-card__genres--genre">Action</p>
             <p className="movie-card__genres--genre">Drama</p>
           </div>
-          <p className="movie-card__description">
-            A former basketball all-star, who has lost his wife and family foundation in a struggle with addiction
-            attempts to regain his soul and salvation by becoming the coach of a disparate ethnically mixed high
-          </p>
+          <p className="movie-card__description">{overview}</p>
         </div>
       </div>
     )
