@@ -23,15 +23,11 @@ export default class TmdbApi {
   }
   async getMovies(keyWord) {
     const url = this.createUrl(keyWord)
-    try {
-      const response = await fetch(url, this._requestOptions)
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}, message: ${response.statusText}`)
-      }
-      return await response.json()
-    } catch (error) {
-      //TODO show error message to user
-      throw new Error(error)
+    const response = await fetch(url, this._requestOptions)
+    if (!response.ok) {
+      console.log(response)
+      throw new Error(`Response status: ${response.status}`)
     }
+    return await response.json()
   }
 }

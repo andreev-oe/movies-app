@@ -60,3 +60,11 @@ body {
     font-size: 12px;
     line-height: 22px;
 }
+.spinner {
+    text-align: center;
+    width: 100%;
+}
+.error-message {
+    margin: 0 auto;
+    width: 70%;
+}
