@@ -82,13 +82,11 @@ export default class App extends React.Component {
     ) : null
     const content = hasData ? this.showMoviesCards(movies) : null
     return (
-      <React.Fragment>
-        <div className="movies">
-          {content}
-          {spinner}
-          {errorMessage}
-        </div>
-      </React.Fragment>
+      <div className="movies">
+        {content}
+        {spinner}
+        {errorMessage}
+      </div>
     )
   }
 }
