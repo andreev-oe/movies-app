@@ -35,15 +35,14 @@ export default class App extends React.Component {
     this.movies
       .getMovies('return')
       .then((data) => {
-        data.results.forEach(({ id, overview, release_date, title, poster_path }) => {
-          const formattedDate = release_date ? format(new Date(release_date), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT
+        data.forEach(({ id, overview, releaseDate, title, posterPath }) => {
           this.setState(({ movies }) => {
             const movie = {
               id: id,
               overview: overview ? this.shortenOverview(overview) : NO_OVERVIEW_TEXT,
-              releaseDate: formattedDate,
+              releaseDate: releaseDate ? format(new Date(releaseDate), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT,
               title: title,
-              posterPath: poster_path ? `${POSTER_URL}${poster_path}` : '',
+              posterPath: posterPath ? `${POSTER_URL}${posterPath}` : '',
             }
             const updatedMovies = [...movies]
             updatedMovies.push(movie)
