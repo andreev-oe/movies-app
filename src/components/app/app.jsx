@@ -4,6 +4,7 @@ import { Alert, Spin } from 'antd'
 
 import MovieCard from '../movie-card/movie-card.jsx'
 import TmdbApi from '../../api/tmdb-api.js'
+import defaultPoster from '../../img/default-poster.jpg'
 
 const ERROR_MESSAGE = 'Sorry, content not loaded, check your internet connection and try to update page'
 const MAX_OVERVIEW_LENGTH = 200
@@ -42,7 +43,7 @@ export default class App extends React.Component {
               overview: overview ? this.shortenOverview(overview) : NO_OVERVIEW_TEXT,
               releaseDate: releaseDate ? format(new Date(releaseDate), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT,
               title: title,
-              posterPath: posterPath ? `${POSTER_URL}${posterPath}` : '',
+              posterPath: posterPath ? `${POSTER_URL}${posterPath}` : defaultPoster,
             }
             const updatedMovies = [...movies]
             updatedMovies.push(movie)
