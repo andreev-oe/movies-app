@@ -4,15 +4,24 @@ body {
 @font-face {
     font-family: 'Inter', sans-serif;
 }
-.movies {
+.content-wrapper {
     box-sizing: border-box;
     background-color: #FFFFFF;
     margin: 0 auto;
     padding: 33px;
     width: 1010px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+}
+.movies {
+    box-sizing: border-box;
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     gap: 36px;
+    margin-top: 32px;
     font-family: 'Inter', sans-serif;
     font-style: normal;
     font-weight: 400;
@@ -67,4 +76,17 @@ body {
 .error-message {
     margin: 0 auto;
     width: 70%;
+}
+.search-field {
+    line-height: 22px;
+    box-sizing: border-box !important;
+    border: 1px solid #D9D9D9 !important;
+    border-radius: 4px;
+    font-size: 16px !important;
+    padding: 8px 12px !important;
+}
+.pagination {
+    text-align: center;
+    margin-top: 32px;
+    height: 40px;
 }

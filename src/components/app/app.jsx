@@ -1,6 +1,6 @@
 import React from 'react'
 import { format } from 'date-fns'
-import { Alert, Spin } from 'antd'
+import { Alert, Spin, Pagination, Input } from 'antd'
 
 import MovieCard from '../movie-card/movie-card.jsx'
 import TmdbApi from '../../api/tmdb-api.js'
@@ -82,10 +82,14 @@ export default class App extends React.Component {
     ) : null
     const content = hasData ? this.showMoviesCards(movies) : null
     return (
-      <div className="movies">
-        {content}
-        {spinner}
-        {errorMessage}
+      <div className="content-wrapper">
+        <Input className="search-field" placeholder={'Type here to search...'} />
+        <div className="movies">
+          {content}
+          {spinner}
+          {errorMessage}
+        </div>
+        <Pagination className="pagination" />
       </div>
     )
   }
