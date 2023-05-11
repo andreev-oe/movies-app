@@ -14,7 +14,7 @@ export default class TmdbApi {
   createUrl(keyWord) {
     const searchParams = new URLSearchParams({
       query: keyWord,
-      include_adult: true,
+      include_adult: false,
       language: 'en-US',
       page: 1,
       api_key: this._apiKey,
