@@ -18,15 +18,16 @@ export default class App extends React.Component {
     super(props)
     this.state = {
       movies: [],
+      totalPages: 0,
       loading: true,
       error: false,
       errorContent: null,
       searchText: null,
     }
     this.movies = new TmdbApi()
-    this.getMovies = () => {
+    this.getMovies = (page = 1) => {
       this.movies
-        .getMovies(this.state.searchText)
+        .getMovies(this.state.searchText, page)
         .then((data) => {
           this.setState({
             movies: [],
@@ -46,6 +47,7 @@ export default class App extends React.Component {
               return {
                 movies: updatedMovies,
                 loading: false,
+                totalPages: data.totalPages,
               }
             })
           })
@@ -73,12 +75,13 @@ export default class App extends React.Component {
     return overview
   }
   showMoviesCards(movies) {
+    //TODO too many paintings, look at index then map goes through the loop
     return movies.map(({ id, overview, releaseDate, title, posterPath }) => {
       return <MovieCard key={id} overview={overview} releaseDate={releaseDate} title={title} posterPath={posterPath} />
     })
   }
   render() {
-    const { movies, loading, error, errorContent } = this.state
+    const { movies, loading, error, errorContent, totalPages } = this.state
     return (
       <div className="content-wrapper">
         <SearchBar
@@ -95,7 +98,13 @@ export default class App extends React.Component {
           errorContent={errorContent}
           showMoviesCards={this.showMoviesCards}
         />
-        <Pagination defaultCurrent={1} total={50} className="pagination" />
+        <Pagination
+          pageSize={20}
+          defaultCurrent={1}
+          total={totalPages}
+          onChange={(page) => this.getMovies(page)}
+          className="pagination"
+        />
       </div>
     )
   }

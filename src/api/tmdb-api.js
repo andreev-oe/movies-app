@@ -11,18 +11,19 @@ export default class TmdbApi {
       },
     }
   }
-  createUrl(keyWord) {
+  createUrl(keyWord, page) {
     const searchParams = new URLSearchParams({
       query: keyWord,
       include_adult: false,
       language: 'en-US',
-      page: 1,
+      page: page,
       api_key: this._apiKey,
     }).toString()
     return new URL(`${this._searchUrl}?${searchParams}`)
   }
   _transformMovies(movies) {
-    return movies.results.map((movie) => {
+    const totalPages = movies.total_pages
+    const results = movies.results.map((movie) => {
       const transformedMovies = {
         ...movie,
         backdropPath: movie.backdrop_path,
@@ -44,9 +45,11 @@ export default class TmdbApi {
       delete transformedMovies.vote_count
       return transformedMovies
     })
+    results.totalPages = totalPages
+    return results
   }
-  async getMovies(keyWord) {
-    const url = this.createUrl(keyWord)
+  async getMovies(keyWord, page) {
+    const url = this.createUrl(keyWord, page)
     const response = await fetch(url, this._requestOptions)
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`)
