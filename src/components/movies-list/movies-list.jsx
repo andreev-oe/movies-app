@@ -2,6 +2,7 @@ import React from 'react'
 import { Alert, Spin } from 'antd'
 
 const ERROR_MESSAGE = 'Sorry, content not loaded, check your internet connection and try to update page'
+const NO_MOVIES_MESSAGE = 'No movies found'
 
 export default class MoviesList extends React.Component {
   constructor(props) {
@@ -9,9 +10,15 @@ export default class MoviesList extends React.Component {
   }
 
   render() {
-    const { movies, loading, error, errorContent, showMoviesCards } = this.props
+    const { movies, loading, error, noMoviesFound, errorContent, showMoviesCards } = this.props
     const hasData = !(loading && error)
-    const spinner = loading ? <Spin className="spinner" size="large" /> : null
+    const spinner = loading ? (
+      <div className="spinner-container">
+        <Spin tip="Loading..." className="spinner" size="large">
+          <div className="content" />
+        </Spin>
+      </div>
+    ) : null
     const errorMessage = error ? (
       <Alert
         showIcon
@@ -21,12 +28,16 @@ export default class MoviesList extends React.Component {
         description={`Description - ${errorContent}`}
       />
     ) : null
+    const noMoviesMessage = noMoviesFound ? (
+      <Alert showIcon type={'info'} className="error-message" message={NO_MOVIES_MESSAGE} />
+    ) : null
     const content = hasData ? showMoviesCards(movies) : null
     return (
       <div className="movies">
         {content}
-        {spinner}
         {errorMessage}
+        {noMoviesMessage}
+        {spinner}
       </div>
     )
   }

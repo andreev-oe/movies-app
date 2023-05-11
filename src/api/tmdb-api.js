@@ -49,6 +49,10 @@ export default class TmdbApi {
     return results
   }
   async getMovies(keyWord, page) {
+    //TODO temporary this is the default value for fetch
+    if (!keyWord) {
+      keyWord = 'return'
+    }
     const url = this.createUrl(keyWord, page)
     const response = await fetch(url, this._requestOptions)
     if (!response.ok) {

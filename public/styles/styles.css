@@ -1,21 +1,28 @@
 body {
     background-color:  #F7F7F7;
+    margin: 0;
+    overflow-x: hidden;
 }
 @font-face {
     font-family: 'Inter', sans-serif;
 }
 .content-wrapper {
+    width: 100%;
+}
+.page-content {
     box-sizing: border-box;
     background-color: #FFFFFF;
     margin: 0 auto;
     padding: 33px;
     width: 1010px;
+    min-height: 100vh;
     font-size: 16px;
     font-family: 'Inter', sans-serif;
     font-style: normal;
     font-weight: 400;
 }
 .movies {
+    position: relative;
     box-sizing: border-box;
     width: 100%;
     display: flex;
@@ -69,9 +76,17 @@ body {
     font-size: 12px;
     line-height: 22px;
 }
+.spinner-container {
+    display: block;
+    position: absolute;
+    left: calc(50% - 50px);
+}
 .spinner {
     text-align: center;
     width: 100%;
+}
+.content {
+    padding: 50px;
 }
 .error-message {
     margin: 0 auto;
@@ -89,4 +104,7 @@ body {
     text-align: center;
     margin-top: 32px;
     height: 40px;
+}
+.loading-true {
+    display: none;
 }

@@ -4,7 +4,7 @@ import { Input } from 'antd'
 export default class SearchBar extends React.Component {
   constructor(props) {
     super(props)
-    this.debouncedRequest = this.debounce(this.props.getMovies, 2000)
+    this.debouncedRequest = this.debounce(this.props.getMovies, 1000)
   }
   debounce(fn, debounceTime) {
     let debounceTimer
