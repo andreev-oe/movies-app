@@ -24,6 +24,7 @@ export default class App extends React.Component {
       noMoviesFound: false,
       errorContent: null,
       searchText: null,
+      guestSessionId: null,
     }
     this.movies = new TmdbApi()
     this.getMovies = (page = 1) => {
@@ -103,7 +104,12 @@ export default class App extends React.Component {
     })
   }
   componentDidMount() {
-    this.getMovies()
+    this.movies.createGuestSession().then((data) => {
+      this.setState({
+        guestSessionId: data.guestSessionId,
+      })
+      this.getMovies()
+    })
   }
 
   render() {
