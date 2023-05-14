@@ -2,8 +2,8 @@ import React from 'react'
 import { format } from 'date-fns'
 import { Pagination, Tabs } from 'antd'
 
-import MovieCard from '../movie-card/movie-card.jsx'
-import TmdbApi from '../../api/tmdb-api.js'
+import { Provider } from '../../services/movies-context/movies-context.jsx'
+import TmdbApi from '../../services/api/tmdb-api.js'
 import defaultPoster from '../../img/default-poster.jpg'
 import SearchBar from '../search-bar/search-bar.jsx'
 import MoviesList from '../movies-list/movies-list.jsx'
@@ -51,10 +51,11 @@ export default class App extends React.Component {
               error: false,
             })
           }
-          data.forEach(({ id, overview, releaseDate, title, posterPath, popularity }) => {
+          data.forEach(({ id, genreIds, overview, releaseDate, title, posterPath, popularity }) => {
             this.setState(({ movies }) => {
               const movie = {
                 id: id,
+                genreIds: genreIds,
                 overview: overview ? this.shortenOverview(overview) : NO_OVERVIEW_TEXT,
                 releaseDate: releaseDate ? format(new Date(releaseDate), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT,
                 title: title,
@@ -99,21 +100,6 @@ export default class App extends React.Component {
     }
     return overview
   }
-  showMoviesCards(movies) {
-    //TODO too many paintings, look at index then map goes through the loop
-    return movies.map(({ id, overview, releaseDate, title, posterPath, popularity }) => {
-      return (
-        <MovieCard
-          key={id}
-          overview={overview}
-          releaseDate={releaseDate}
-          title={title}
-          posterPath={posterPath}
-          popularity={popularity}
-        />
-      )
-    })
-  }
   componentDidMount() {
     this.movies.createGuestSession().then((data) => {
       this.setState({
@@ -129,7 +115,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { movies, loading, error, noMoviesFound, errorContent, totalPages } = this.state
+    const { loading, totalPages } = this.state
     const onChange = (key) => {
       console.log(key)
     }
@@ -155,14 +141,9 @@ export default class App extends React.Component {
             placeholder={'Type here to search...'}
             value={this.state.searchText}
           />
-          <MoviesList
-            movies={movies}
-            loading={loading}
-            error={error}
-            noMoviesFound={noMoviesFound}
-            errorContent={errorContent}
-            showMoviesCards={(movies) => this.showMoviesCards(movies)}
-          />
+          <Provider value={this.state}>
+            <MoviesList />
+          </Provider>
           <Pagination
             pageSize={20}
             defaultCurrent={1}
