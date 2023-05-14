@@ -34,10 +34,15 @@ body {
     font-weight: 400;
 }
 .movie-card {
+    position: relative;
     display: flex;
     width: 454px;
     height: 281px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition-duration: 0.2s;
+}
+.movie-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 .movie-card__poster {
     object-fit: cover;
@@ -76,6 +81,23 @@ body {
     font-size: 12px;
     line-height: 22px;
 }
+.movie-card__rating {
+    position: absolute;
+    top: 12px;
+    right: 9px;
+    border: 2px solid #E9D100;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.movie-card__rating--data {
+    font-size: 12px;
+    margin: 0;
+    vertical-align: middle;
+}
 .spinner-container {
     display: block;
     position: absolute;
@@ -107,4 +129,7 @@ body {
 }
 .loading-true {
     display: none;
+}
+.ant-rate {
+    font-size: 14px;
 }

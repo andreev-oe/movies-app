@@ -1,4 +1,5 @@
 import React from 'react'
+import { Rate } from 'antd'
 
 const POSTER_WIDTH = 183
 const POSTER_HEIGHT = 281
@@ -15,6 +16,10 @@ const MovieCard = ({ overview, releaseDate, title, posterPath }) => {
           <p className="movie-card__genres--genre">Drama</p>
         </div>
         <p className="movie-card__description">{overview}</p>
+        <Rate count={10} />
+        <div className="movie-card__rating">
+          <p className="movie-card__rating--data">6.6</p>
+        </div>
       </div>
     </div>
   )

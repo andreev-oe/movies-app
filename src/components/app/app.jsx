@@ -1,6 +1,6 @@
 import React from 'react'
 import { format } from 'date-fns'
-import { Pagination } from 'antd'
+import { Pagination, Tabs } from 'antd'
 
 import MovieCard from '../movie-card/movie-card.jsx'
 import TmdbApi from '../../api/tmdb-api.js'
@@ -108,9 +108,24 @@ export default class App extends React.Component {
 
   render() {
     const { movies, loading, error, noMoviesFound, errorContent, totalPages } = this.state
+    const onChange = (key) => {
+      console.log(key)
+    }
+    const items = [
+      {
+        key: '1',
+        label: 'Search',
+      },
+      {
+        key: '2',
+        label: 'Rated',
+      },
+    ]
+
     return (
       <div className="content-wrapper">
         <div className="page-content">
+          <Tabs centered defaultActiveKey="1" items={items} onChange={onChange} />
           <SearchBar
             onChange={this.onInput}
             getMovies={this.getMovies}
