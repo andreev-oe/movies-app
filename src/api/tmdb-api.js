@@ -4,14 +4,9 @@ export default class TmdbApi {
       'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3ZTQzZmRkNDIwYzg4ODFiYmEwOGQxYjhkZTc1OWM3MSIsInN1YiI6IjY0NTkzN2JjMTU2Y2M3MDE3ZDcyZDBhNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.oDVyvuvmKACZBcS_uPrDixm2moA9Jct2fLhutfeGlzU'
     this._apiKey = 'api_key=7e43fdd420c8881bba08d1b8de759c71'
     this._searchUrl = 'https://api.themoviedb.org/3/search/movie'
-    this._searchMoviesOptions = {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization: this.authToken,
-      },
-    }
-    this._guestSessionOptions = {
+    this._guestSessionUrl = 'https://api.themoviedb.org/3/authentication/guest_session/new'
+    this._genresUrl = 'https://api.themoviedb.org/3/genre/movie/list?language=en'
+    this._requestOptions = {
       method: 'GET',
       headers: {
         accept: 'application/json',
@@ -72,7 +67,7 @@ export default class TmdbApi {
       keyWord = 'return'
     }
     const url = this.createUrl(keyWord, page)
-    const response = await fetch(url, this._searchMoviesOptions)
+    const response = await fetch(url, this._requestOptions)
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`)
     }
@@ -80,14 +75,18 @@ export default class TmdbApi {
     return this._transformMovies(movies)
   }
   async createGuestSession() {
-    const response = await fetch(
-      'https://api.themoviedb.org/3/authentication/guest_session/new',
-      this._guestSessionOptions
-    )
+    const response = await fetch(this._guestSessionUrl, this._requestOptions)
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`)
     }
     const data = await response.json()
     return this._transformGuestSession(data)
+  }
+  async getGenres() {
+    const response = await fetch(this._genresUrl, this._requestOptions)
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`)
+    }
+    return await response.json()
   }
 }

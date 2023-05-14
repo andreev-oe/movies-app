@@ -5,10 +5,6 @@ const POSTER_WIDTH = 183
 const POSTER_HEIGHT = 281
 
 const MovieCard = ({ overview, releaseDate, title, posterPath, popularity }) => {
-  //От 0 до 3 - #E90000
-  // От 3 до 5 - #E97E00
-  // От 5 до 7 - #E9D100
-  // Выше 7 - #66E900
   const setColor = (popularity) => {
     if (popularity < 3) {
       return 'bad'

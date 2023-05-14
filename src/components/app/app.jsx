@@ -25,6 +25,7 @@ export default class App extends React.Component {
       errorContent: null,
       searchText: null,
       guestSessionId: null,
+      genres: [],
     }
     this.movies = new TmdbApi()
     this.getMovies = (page = 1) => {
@@ -117,6 +118,11 @@ export default class App extends React.Component {
     this.movies.createGuestSession().then((data) => {
       this.setState({
         guestSessionId: data.guestSessionId,
+      })
+      this.movies.getGenres().then((data) => {
+        this.setState({
+          genres: data.genres,
+        })
       })
       this.getMovies()
     })
