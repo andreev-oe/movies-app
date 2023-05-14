@@ -50,7 +50,7 @@ export default class App extends React.Component {
               error: false,
             })
           }
-          data.forEach(({ id, overview, releaseDate, title, posterPath }) => {
+          data.forEach(({ id, overview, releaseDate, title, posterPath, popularity }) => {
             this.setState(({ movies }) => {
               const movie = {
                 id: id,
@@ -58,6 +58,7 @@ export default class App extends React.Component {
                 releaseDate: releaseDate ? format(new Date(releaseDate), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT,
                 title: title,
                 posterPath: posterPath ? `${POSTER_URL}${posterPath}` : defaultPoster,
+                popularity: popularity,
               }
               const updatedMovies = [...movies]
               updatedMovies.push(movie)
@@ -99,8 +100,17 @@ export default class App extends React.Component {
   }
   showMoviesCards(movies) {
     //TODO too many paintings, look at index then map goes through the loop
-    return movies.map(({ id, overview, releaseDate, title, posterPath }) => {
-      return <MovieCard key={id} overview={overview} releaseDate={releaseDate} title={title} posterPath={posterPath} />
+    return movies.map(({ id, overview, releaseDate, title, posterPath, popularity }) => {
+      return (
+        <MovieCard
+          key={id}
+          overview={overview}
+          releaseDate={releaseDate}
+          title={title}
+          posterPath={posterPath}
+          popularity={popularity}
+        />
+      )
     })
   }
   componentDidMount() {
@@ -145,7 +155,7 @@ export default class App extends React.Component {
             error={error}
             noMoviesFound={noMoviesFound}
             errorContent={errorContent}
-            showMoviesCards={this.showMoviesCards}
+            showMoviesCards={(movies) => this.showMoviesCards(movies)}
           />
           <Pagination
             pageSize={20}

@@ -85,7 +85,8 @@ body {
     position: absolute;
     top: 12px;
     right: 9px;
-    border: 2px solid #E9D100;
+    border-width: 2px;
+    border-style: solid;
     border-radius: 50%;
     width: 30px;
     height: 30px;
@@ -93,7 +94,19 @@ body {
     justify-content: center;
     align-items: center;
 }
-.movie-card__rating--data {
+.movie-card__rating--bad {
+    border-color: #E90000;
+}
+.movie-card__rating--average {
+    border-color: #E97E00;
+}
+.movie-card__rating--good {
+    border-color: #E9D100;
+}
+.movie-card__rating--great {
+    border-color: #66E900;
+}
+.movie-card__rating--popularity {
     font-size: 12px;
     margin: 0;
     vertical-align: middle;
