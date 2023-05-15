@@ -30,10 +30,8 @@ export default class App extends React.Component {
     this.moviesApi = new TmdbApi()
     this.switchTab = (key) => {
       if (key === '1') {
-        console.log(1)
         this.getMovies(1)
       } else {
-        console.log(2)
         this.getRatedMovies(1)
       }
     }
