@@ -28,6 +28,15 @@ export default class App extends React.Component {
       genres: [],
     }
     this.moviesApi = new TmdbApi()
+    this.switchTab = (key) => {
+      if (key === '1') {
+        console.log(1)
+        this.getMovies(1)
+      } else {
+        console.log(2)
+        this.getRatedMovies(1)
+      }
+    }
     this.getMovies = (page = 1) => {
       this.setState(() => {
         return {
@@ -39,6 +48,64 @@ export default class App extends React.Component {
       })
       this.moviesApi
         .getMovies(this.state.searchText, page)
+        .then((data) => {
+          this.setState({
+            movies: [],
+          })
+          if (!data.length) {
+            this.setState({
+              movies: [],
+              noMoviesFound: true,
+              loading: false,
+              error: false,
+            })
+          }
+          data.forEach(({ id, genreIds, overview, releaseDate, title, posterPath, popularity }) => {
+            this.setState(({ movies }) => {
+              const movie = {
+                id: id,
+                genreIds: genreIds,
+                overview: overview ? this.shortenOverview(overview) : NO_OVERVIEW_TEXT,
+                releaseDate: releaseDate ? format(new Date(releaseDate), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT,
+                title: title,
+                posterPath: posterPath ? `${POSTER_URL}${posterPath}` : defaultPoster,
+                popularity: popularity,
+              }
+              const updatedMovies = [...movies]
+              updatedMovies.push(movie)
+              return {
+                movies: updatedMovies,
+                loading: false,
+                error: false,
+                noMoviesFound: false,
+                totalPages: data.totalPages,
+              }
+            })
+          })
+        })
+        .catch((errorContent) => {
+          this.setState(() => {
+            return {
+              movies: [],
+              error: true,
+              noMoviesFound: false,
+              errorContent: errorContent.toString(),
+              loading: false,
+            }
+          })
+        })
+    }
+    this.getRatedMovies = (page = 1) => {
+      this.setState(() => {
+        return {
+          movies: [],
+          noMoviesFound: false,
+          error: false,
+          loading: true,
+        }
+      })
+      this.moviesApi
+        .getRatedMovies(page, this.state.guestSessionId)
         .then((data) => {
           this.setState({
             movies: [],
@@ -116,9 +183,6 @@ export default class App extends React.Component {
 
   render() {
     const { loading, totalPages } = this.state
-    const onChange = (key) => {
-      console.log(key)
-    }
     const items = [
       {
         key: '1',
@@ -133,7 +197,7 @@ export default class App extends React.Component {
     return (
       <div className="content-wrapper">
         <div className="page-content">
-          <Tabs centered defaultActiveKey="1" items={items} onChange={onChange} />
+          <Tabs centered defaultActiveKey="1" items={items} onChange={(key) => this.switchTab(key)} />
           <SearchBar
             onChange={this.onInput}
             getMovies={this.getMovies}

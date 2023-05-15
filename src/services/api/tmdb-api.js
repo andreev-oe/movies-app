@@ -13,6 +13,33 @@ export default class TmdbApi {
         Authorization: this.authToken,
       },
     }
+    this.getMovies = async (keyWord, page) => {
+      //TODO temporary this is the default value for fetch
+      if (!keyWord) {
+        keyWord = 'return'
+      }
+      const url = this.createUrl(keyWord, page)
+      const response = await fetch(url, this._getOptions)
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`)
+      }
+      const movies = await response.json()
+      return this._transformMovies(movies)
+    }
+    this.getRatedMovies = async (page, guestSessionId) => {
+      console.log(guestSessionId)
+      // 'https://api.themoviedb.org/3/guest_session/${guestSessionId}/rated/movies?api_key=${this._apiKey}&language=en-US&sort_by=created_at.asc'
+      // `https://api.themoviedb.org/3/guest_session/${guestSessionId}/rated/movies?language=en-US&page=${page}&sort_by=created_at.asc`
+      const response = await fetch(
+        `https://api.themoviedb.org/3/guest_session/${guestSessionId}/rated/movies?api_key=${this._apiKey}`,
+        this._getOptions
+      )
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`)
+      }
+      const movies = await response.json()
+      return this._transformMovies(movies)
+    }
     this.addRating = async (rating, movieId, guestSessionId) => {
       const response = await fetch(
         `https://api.themoviedb.org/3/movie/${movieId}/rating?api_key=${this._apiKey}&guest_session_id=${guestSessionId}`,
@@ -28,8 +55,7 @@ export default class TmdbApi {
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`)
       }
-      const data = await response.json()
-      console.log(data)
+      // const data = await response.json()
     }
   }
   createUrl(keyWord, page) {
@@ -86,19 +112,6 @@ export default class TmdbApi {
     }
     const data = await response.json()
     return this._transformGuestSession(data)
-  }
-  async getMovies(keyWord, page) {
-    //TODO temporary this is the default value for fetch
-    if (!keyWord) {
-      keyWord = 'return'
-    }
-    const url = this.createUrl(keyWord, page)
-    const response = await fetch(url, this._getOptions)
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`)
-    }
-    const movies = await response.json()
-    return this._transformMovies(movies)
   }
   async getGenres() {
     const response = await fetch(this._genresUrl, this._getOptions)
