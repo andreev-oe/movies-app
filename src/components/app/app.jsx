@@ -27,7 +27,7 @@ export default class App extends React.Component {
       guestSessionId: null,
       genres: [],
     }
-    this.movies = new TmdbApi()
+    this.moviesApi = new TmdbApi()
     this.getMovies = (page = 1) => {
       this.setState(() => {
         return {
@@ -37,7 +37,7 @@ export default class App extends React.Component {
           loading: true,
         }
       })
-      this.movies
+      this.moviesApi
         .getMovies(this.state.searchText, page)
         .then((data) => {
           this.setState({
@@ -101,11 +101,11 @@ export default class App extends React.Component {
     return overview
   }
   componentDidMount() {
-    this.movies.createGuestSession().then((data) => {
+    this.moviesApi.createGuestSession().then((data) => {
       this.setState({
         guestSessionId: data.guestSessionId,
       })
-      this.movies.getGenres().then((data) => {
+      this.moviesApi.getGenres().then((data) => {
         this.setState({
           genres: data.genres,
         })
@@ -141,7 +141,12 @@ export default class App extends React.Component {
             placeholder={'Type here to search...'}
             value={this.state.searchText}
           />
-          <Provider value={this.state}>
+          <Provider
+            value={{
+              state: this.state,
+              addRating: this.moviesApi.addRating,
+            }}
+          >
             <MoviesList />
           </Provider>
           <Pagination

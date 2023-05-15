@@ -17,6 +17,7 @@ export default class MoviesList extends React.Component {
       return (
         <MovieCard
           key={id}
+          id={id}
           overview={overview}
           releaseDate={releaseDate}
           title={title}
@@ -31,7 +32,7 @@ export default class MoviesList extends React.Component {
   render() {
     return (
       <Consumer>
-        {({ movies, loading, error, noMoviesFound, errorContent }) => {
+        {({ state: { movies, loading, error, noMoviesFound, errorContent } }) => {
           const hasData = !(loading && error)
           const spinner = loading ? (
             <div className="spinner-container">

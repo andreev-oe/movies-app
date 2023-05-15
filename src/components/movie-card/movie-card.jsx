@@ -6,7 +6,7 @@ import { Consumer } from '../../services/movies-context/movies-context.jsx'
 const POSTER_WIDTH = 183
 const POSTER_HEIGHT = 281
 
-const MovieCard = ({ overview, releaseDate, title, posterPath, popularity, genreIds }) => {
+const MovieCard = ({ id, overview, releaseDate, title, posterPath, popularity, genreIds }) => {
   const setColor = (popularity) => {
     if (popularity < 3) {
       return 'bad'
@@ -35,7 +35,7 @@ const MovieCard = ({ overview, releaseDate, title, posterPath, popularity, genre
 
   return (
     <Consumer>
-      {({ genres }) => {
+      {({ state: { genres, guestSessionId }, addRating }) => {
         return (
           <div className="movie-card">
             <img
@@ -50,7 +50,13 @@ const MovieCard = ({ overview, releaseDate, title, posterPath, popularity, genre
               <p className="movie-card__date">{releaseDate}</p>
               <div className="movie-card__genres">{showMovieGenres(genreIds, genres)}</div>
               <p className="movie-card__description">{overview}</p>
-              <Rate count={10} />
+              <Rate
+                allowHalf
+                onChange={(value) => {
+                  addRating(value, id, guestSessionId)
+                }}
+                count={10}
+              />
               <div className={`movie-card__rating movie-card__rating--${setColor(popularity)}`}>
                 <p className="movie-card__rating--popularity">{popularity.toFixed(1)}</p>
               </div>
