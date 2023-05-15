@@ -26,13 +26,24 @@ export default class App extends React.Component {
       searchText: null,
       guestSessionId: null,
       genres: [],
+      searchTabOpened: true,
     }
     this.moviesApi = new TmdbApi()
     this.switchTab = (key) => {
       if (key === '1') {
         this.getMovies(1)
+        this.setState(() => {
+          return {
+            searchTabOpened: true,
+          }
+        })
       } else {
         this.getRatedMovies(1)
+        this.setState(() => {
+          return {
+            searchTabOpened: false,
+          }
+        })
       }
     }
     this.getMovies = (page = 1) => {
@@ -196,13 +207,15 @@ export default class App extends React.Component {
       <div className="content-wrapper">
         <div className="page-content">
           <Tabs centered defaultActiveKey="1" items={items} onChange={(key) => this.switchTab(key)} />
-          <SearchBar
-            onChange={this.onInput}
-            getMovies={this.getMovies}
-            className="search-field"
-            placeholder={'Type here to search...'}
-            value={this.state.searchText}
-          />
+          {this.state.searchTabOpened ? (
+            <SearchBar
+              onChange={this.onInput}
+              getMovies={this.getMovies}
+              className="search-field"
+              placeholder={'Type here to search...'}
+              value={this.state.searchText}
+            />
+          ) : null}
           <Provider
             value={{
               state: this.state,
