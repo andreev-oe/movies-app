@@ -8,12 +8,32 @@ import defaultPoster from '../../img/default-poster.jpg'
 import { SearchBar } from '../SearchBar/index.js'
 import { MoviesList } from '../MoviesList/index.js'
 
+const TABS = [
+  {
+    key: '1',
+    label: 'Search',
+  },
+  {
+    key: '2',
+    label: 'Rated',
+  },
+]
+
 const MAX_OVERVIEW_LENGTH = 200
 const MAX_TITLE_LENGTH = 45
 const NO_RELEASE_DATE_TEXT = 'Release date unknown'
 const NO_OVERVIEW_TEXT = 'This movie has no description'
 const NO_TITLE_TEXT = 'This movie has no title'
 const POSTER_URL = 'https://image.tmdb.org/t/p/w500'
+
+const shortenText = (text, maxLength) => {
+  if (text.length > maxLength) {
+    const shortText = text.slice(0, maxLength).split(' ')
+    shortText.pop()
+    return `${shortText.join(' ')}...`
+  }
+  return text
+}
 
 export default class App extends React.Component {
   constructor(props) {
@@ -31,118 +51,112 @@ export default class App extends React.Component {
       searchTabOpened: true,
     }
     this.moviesApi = new TmdbApi()
-    this.switchTab = (key) => {
-      if (key === '1') {
-        this.getMovies()
-        this.setState(() => {
-          return {
-            searchTabOpened: true,
-          }
-        })
-      } else {
-        this.getRatedMovies()
-        this.setState(() => {
-          return {
-            searchTabOpened: false,
-          }
-        })
+    this.onInput = this.onInput.bind(this)
+    this.getMovies = this.getMovies.bind(this)
+  }
+  getMovies(page) {
+    this.setState(() => {
+      return {
+        movies: [],
+        noMoviesFound: false,
+        error: false,
+        loading: true,
       }
-    }
-    this.setMoviesToState = (data) => {
+    })
+    this.moviesApi
+      .getMovies(page, this.state.searchText)
+      .then((data) => this.setMoviesToState(data))
+      .catch((errorContent) => {
+        this.setState(() => {
+          return {
+            movies: [],
+            error: true,
+            noMoviesFound: true,
+            errorContent: errorContent.toString(),
+            loading: false,
+          }
+        })
+      })
+  }
+  onInput(evt) {
+    this.setState({
+      searchText: evt.target.value,
+    })
+  }
+  getRatedMovies() {
+    this.setState(() => {
+      return {
+        movies: [],
+        noMoviesFound: false,
+        error: false,
+        loading: true,
+      }
+    })
+    this.moviesApi
+      .getRatedMovies(this.state.guestSessionId)
+      .then((data) => this.setMoviesToState(data))
+      .catch((errorContent) => {
+        this.setState(() => {
+          return {
+            movies: [],
+            error: true,
+            noMoviesFound: true,
+            errorContent: errorContent.toString(),
+            loading: false,
+          }
+        })
+      })
+  }
+  setMoviesToState(data) {
+    this.setState({
+      movies: [],
+    })
+    if (!data.length) {
       this.setState({
         movies: [],
+        noMoviesFound: true,
+        loading: false,
+        error: false,
       })
-      if (!data.length) {
-        this.setState({
-          movies: [],
-          noMoviesFound: true,
-          loading: false,
-          error: false,
-        })
+    }
+    let updatedMovies = []
+    data.forEach(({ id, genreIds, overview, releaseDate, title, posterPath, popularity }) => {
+      const movie = {
+        id: id,
+        genreIds: genreIds,
+        overview: overview ? shortenText(overview, MAX_OVERVIEW_LENGTH) : NO_OVERVIEW_TEXT,
+        releaseDate: releaseDate ? format(new Date(releaseDate), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT,
+        title: title ? shortenText(title, MAX_TITLE_LENGTH) : NO_TITLE_TEXT,
+        posterPath: posterPath ? `${POSTER_URL}${posterPath}` : defaultPoster,
+        popularity: popularity,
       }
-      let updatedMovies = []
-      data.forEach(({ id, genreIds, overview, releaseDate, title, posterPath, popularity }) => {
-        const movie = {
-          id: id,
-          genreIds: genreIds,
-          overview: overview ? this.shortenText(overview, MAX_OVERVIEW_LENGTH) : NO_OVERVIEW_TEXT,
-          releaseDate: releaseDate ? format(new Date(releaseDate), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT,
-          title: title ? this.shortenText(title, MAX_TITLE_LENGTH) : NO_TITLE_TEXT,
-          posterPath: posterPath ? `${POSTER_URL}${posterPath}` : defaultPoster,
-          popularity: popularity,
-        }
-        updatedMovies.push(movie)
-      })
-      this.setState(() => {
-        return {
-          movies: updatedMovies,
-          loading: false,
-          error: false,
-          totalPages: data.totalPages,
-        }
-      })
-    }
-    this.getMovies = (page) => {
-      this.setState(() => {
-        return {
-          movies: [],
-          noMoviesFound: false,
-          error: false,
-          loading: true,
-        }
-      })
-      this.moviesApi
-        .getMovies(page, this.state.searchText)
-        .then((data) => this.setMoviesToState(data))
-        .catch((errorContent) => {
-          this.setState(() => {
-            return {
-              movies: [],
-              error: true,
-              noMoviesFound: true,
-              errorContent: errorContent.toString(),
-              loading: false,
-            }
-          })
-        })
-    }
-    this.getRatedMovies = () => {
-      this.setState(() => {
-        return {
-          movies: [],
-          noMoviesFound: false,
-          error: false,
-          loading: true,
-        }
-      })
-      this.moviesApi
-        .getRatedMovies(this.state.guestSessionId)
-        .then((data) => this.setMoviesToState(data))
-        .catch((errorContent) => {
-          this.setState(() => {
-            return {
-              movies: [],
-              error: true,
-              noMoviesFound: true,
-              errorContent: errorContent.toString(),
-              loading: false,
-            }
-          })
-        })
-    }
-    this.onInput = (evt) => {
-      this.setState({
-        searchText: evt.target.value,
-      })
-    }
+      updatedMovies.push(movie)
+    })
+    this.setState(() => {
+      return {
+        movies: updatedMovies,
+        loading: false,
+        error: false,
+        totalPages: data.totalPages,
+      }
+    })
   }
-  shortenText(text, maxLength) {
-    if (text.length > maxLength) {
-      const shortText = text.slice(0, maxLength).split(' ')
-      shortText.pop()
-      return `${shortText.join(' ')}...`
+  switchTab(key) {
+    if (key === '1') {
+      this.getMovies()
+      this.setState(() => {
+        return {
+          searchTabOpened: true,
+        }
+      })
+    } else {
+      this.getRatedMovies()
+      this.setState(() => {
+        return {
+          searchTabOpened: false,
+        }
+      })
     }
-    return text
   }
   componentDidMount() {
     this.moviesApi
@@ -183,23 +197,12 @@ export default class App extends React.Component {
         })
       })
   }
-
   render() {
     const { movies, totalPages } = this.state
-    const items = [
-      {
-        key: '1',
-        label: 'Search',
-      },
-      {
-        key: '2',
-        label: 'Rated',
-      },
-    ]
     return (
       <div className="content-wrapper">
         <div className="page-content">
-          <Tabs centered defaultActiveKey="1" items={items} onChange={(key) => this.switchTab(key)} />
+          <Tabs centered defaultActiveKey="1" items={TABS} onChange={(key) => this.switchTab(key)} />
           {this.state.searchTabOpened ? (
             <SearchBar
               onChange={this.onInput}
@@ -217,15 +220,13 @@ export default class App extends React.Component {
           >
             <MoviesList />
           </Provider>
-          {movies.length !== 0 ? (
-            <Pagination
-              pageSize={20}
-              defaultCurrent={1}
-              total={totalPages}
-              onChange={(page) => this.getMovies(page)}
-              className="pagination"
-            />
-          ) : null}
+          <Pagination
+            pageSize={20}
+            defaultCurrent={1}
+            total={totalPages}
+            onChange={(page) => this.getMovies(page)}
+            className={`pagination ${movies.length ? '' : 'js-hidden'}`}
+          />
         </div>
       </div>
     )

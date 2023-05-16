@@ -6,33 +6,32 @@ import { Consumer } from '../../services/movies-context/movies-context.jsx'
 const POSTER_WIDTH = 183
 const POSTER_HEIGHT = 281
 
+const setColor = (popularity) => {
+  if (popularity < 3) {
+    return 'bad'
+  }
+  if (popularity >= 3 && popularity < 5) {
+    return 'average'
+  }
+  if (popularity >= 5 && popularity < 7) {
+    return 'good'
+  }
+  return 'great'
+}
+const showMovieGenres = (movieGenresIds, genres) => {
+  const movieGenres = movieGenresIds.map((movieGenreId) => {
+    const genresNames = genres.find((genre) => movieGenreId === genre.id)
+    if (genresNames) {
+      return genresNames.name
+    }
+  })
+  return movieGenres.map((movieGenre, index) => (
+    <p key={movieGenresIds[index]} className="movie-card__genres--genre">
+      {movieGenre}
+    </p>
+  ))
+}
 const MovieCard = ({ id, overview, releaseDate, title, posterPath, popularity, genreIds }) => {
-  const setColor = (popularity) => {
-    if (popularity < 3) {
-      return 'bad'
-    }
-    if (popularity >= 3 && popularity < 5) {
-      return 'average'
-    }
-    if (popularity >= 5 && popularity < 7) {
-      return 'good'
-    }
-    return 'great'
-  }
-  const showMovieGenres = (movieGenresIds, genres) => {
-    const movieGenres = movieGenresIds.map((movieGenreId) => {
-      const genresNames = genres.find((genre) => movieGenreId === genre.id)
-      if (genresNames) {
-        return genresNames.name
-      }
-    })
-    return movieGenres.map((movieGenre, index) => (
-      <p key={movieGenresIds[index]} className="movie-card__genres--genre">
-        {movieGenre}
-      </p>
-    ))
-  }
-
   return (
     <Consumer>
       {({ state: { genres, guestSessionId }, addRating }) => {
