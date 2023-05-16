@@ -1,7 +1,7 @@
 import React from 'react'
 import { Alert, Spin } from 'antd'
 
-import MovieCard from '../movie-card/movie-card.jsx'
+import { MovieCard } from '../MovieCard/index.js'
 import { Consumer } from '../../services/movies-context/movies-context.jsx'
 
 const ERROR_MESSAGE = 'Sorry, content not loaded, check your internet connection and try to update page'

@@ -5,8 +5,8 @@ import { Pagination, Tabs } from 'antd'
 import { Provider } from '../../services/movies-context/movies-context.jsx'
 import TmdbApi from '../../services/api/tmdb-api.js'
 import defaultPoster from '../../img/default-poster.jpg'
-import SearchBar from '../search-bar/search-bar.jsx'
-import MoviesList from '../movies-list/movies-list.jsx'
+import { SearchBar } from '../SearchBar/index.js'
+import { MoviesList } from '../MoviesList/index.js'
 
 const MAX_OVERVIEW_LENGTH = 200
 const MAX_TITLE_LENGTH = 45
@@ -172,7 +172,6 @@ export default class App extends React.Component {
   }
   shortenText(text, maxLength) {
     if (text.length > maxLength) {
-      console.log(maxLength)
       const shortText = text.slice(0, maxLength).split(' ')
       shortText.pop()
       return `${shortText.join(' ')}...`
