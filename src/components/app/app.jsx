@@ -9,8 +9,10 @@ import SearchBar from '../search-bar/search-bar.jsx'
 import MoviesList from '../movies-list/movies-list.jsx'
 
 const MAX_OVERVIEW_LENGTH = 200
+const MAX_TITLE_LENGTH = 45
 const NO_RELEASE_DATE_TEXT = 'Release date unknown'
 const NO_OVERVIEW_TEXT = 'This movie has no description'
+const NO_TITLE_TEXT = 'This movie has no title'
 const POSTER_URL = 'https://image.tmdb.org/t/p/w500'
 
 export default class App extends React.Component {
@@ -74,9 +76,9 @@ export default class App extends React.Component {
               const movie = {
                 id: id,
                 genreIds: genreIds,
-                overview: overview ? this.shortenOverview(overview) : NO_OVERVIEW_TEXT,
+                overview: overview ? this.shortenText(overview, MAX_OVERVIEW_LENGTH) : NO_OVERVIEW_TEXT,
                 releaseDate: releaseDate ? format(new Date(releaseDate), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT,
-                title: title,
+                title: title ? this.shortenText(title, MAX_TITLE_LENGTH) : NO_TITLE_TEXT,
                 posterPath: posterPath ? `${POSTER_URL}${posterPath}` : defaultPoster,
                 popularity: popularity,
               }
@@ -132,9 +134,9 @@ export default class App extends React.Component {
               const movie = {
                 id: id,
                 genreIds: genreIds,
-                overview: overview ? this.shortenOverview(overview) : NO_OVERVIEW_TEXT,
+                overview: overview ? this.shortenText(overview, MAX_OVERVIEW_LENGTH) : NO_OVERVIEW_TEXT,
                 releaseDate: releaseDate ? format(new Date(releaseDate), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT,
-                title: title,
+                title: title ? this.shortenText(title, MAX_TITLE_LENGTH) : NO_TITLE_TEXT,
                 posterPath: posterPath ? `${POSTER_URL}${posterPath}` : defaultPoster,
                 popularity: popularity,
               }
@@ -168,13 +170,14 @@ export default class App extends React.Component {
       })
     }
   }
-  shortenOverview(overview) {
-    if (overview.length > MAX_OVERVIEW_LENGTH) {
-      const shortOverview = overview.slice(0, MAX_OVERVIEW_LENGTH).split(' ')
-      shortOverview.pop()
-      return `${shortOverview.join(' ')}...`
+  shortenText(text, maxLength) {
+    if (text.length > maxLength) {
+      console.log(maxLength)
+      const shortText = text.slice(0, maxLength).split(' ')
+      shortText.pop()
+      return `${shortText.join(' ')}...`
     }
-    return overview
+    return text
   }
   componentDidMount() {
     this.moviesApi.createGuestSession().then((data) => {
