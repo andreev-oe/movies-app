@@ -33,14 +33,14 @@ export default class App extends React.Component {
     this.moviesApi = new TmdbApi()
     this.switchTab = (key) => {
       if (key === '1') {
-        this.getMovies(1)
+        this.getMovies()
         this.setState(() => {
           return {
             searchTabOpened: true,
           }
         })
       } else {
-        this.getRatedMovies(1)
+        this.getRatedMovies()
         this.setState(() => {
           return {
             searchTabOpened: false,
@@ -48,7 +48,42 @@ export default class App extends React.Component {
         })
       }
     }
-    this.getMovies = (page = 1) => {
+    this.setMoviesToState = (data) => {
+      this.setState({
+        movies: [],
+      })
+      if (!data.length) {
+        this.setState({
+          movies: [],
+          noMoviesFound: true,
+          loading: false,
+          error: false,
+        })
+      }
+      let updatedMovies = []
+      data.forEach(({ id, genreIds, overview, releaseDate, title, posterPath, popularity }) => {
+        const movie = {
+          id: id,
+          genreIds: genreIds,
+          overview: overview ? this.shortenText(overview, MAX_OVERVIEW_LENGTH) : NO_OVERVIEW_TEXT,
+          releaseDate: releaseDate ? format(new Date(releaseDate), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT,
+          title: title ? this.shortenText(title, MAX_TITLE_LENGTH) : NO_TITLE_TEXT,
+          posterPath: posterPath ? `${POSTER_URL}${posterPath}` : defaultPoster,
+          popularity: popularity,
+        }
+        updatedMovies.push(movie)
+      })
+      this.setState(() => {
+        return {
+          movies: updatedMovies,
+          loading: false,
+          error: false,
+          noMoviesFound: false,
+          totalPages: data.totalPages,
+        }
+      })
+    }
+    this.getMovies = (page) => {
       this.setState(() => {
         return {
           movies: [],
@@ -58,42 +93,8 @@ export default class App extends React.Component {
         }
       })
       this.moviesApi
-        .getMovies(this.state.searchText, page)
-        .then((data) => {
-          this.setState({
-            movies: [],
-          })
-          if (!data.length) {
-            this.setState({
-              movies: [],
-              noMoviesFound: true,
-              loading: false,
-              error: false,
-            })
-          }
-          data.forEach(({ id, genreIds, overview, releaseDate, title, posterPath, popularity }) => {
-            this.setState(({ movies }) => {
-              const movie = {
-                id: id,
-                genreIds: genreIds,
-                overview: overview ? this.shortenText(overview, MAX_OVERVIEW_LENGTH) : NO_OVERVIEW_TEXT,
-                releaseDate: releaseDate ? format(new Date(releaseDate), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT,
-                title: title ? this.shortenText(title, MAX_TITLE_LENGTH) : NO_TITLE_TEXT,
-                posterPath: posterPath ? `${POSTER_URL}${posterPath}` : defaultPoster,
-                popularity: popularity,
-              }
-              const updatedMovies = [...movies]
-              updatedMovies.push(movie)
-              return {
-                movies: updatedMovies,
-                loading: false,
-                error: false,
-                noMoviesFound: false,
-                totalPages: data.totalPages,
-              }
-            })
-          })
-        })
+        .getMovies(page, this.state.searchText)
+        .then((data) => this.setMoviesToState(data))
         .catch((errorContent) => {
           this.setState(() => {
             return {
@@ -106,7 +107,7 @@ export default class App extends React.Component {
           })
         })
     }
-    this.getRatedMovies = (page = 1) => {
+    this.getRatedMovies = () => {
       this.setState(() => {
         return {
           movies: [],
@@ -116,42 +117,8 @@ export default class App extends React.Component {
         }
       })
       this.moviesApi
-        .getRatedMovies(page, this.state.guestSessionId)
-        .then((data) => {
-          this.setState({
-            movies: [],
-          })
-          if (!data.length) {
-            this.setState({
-              movies: [],
-              noMoviesFound: true,
-              loading: false,
-              error: false,
-            })
-          }
-          data.forEach(({ id, genreIds, overview, releaseDate, title, posterPath, popularity }) => {
-            this.setState(({ movies }) => {
-              const movie = {
-                id: id,
-                genreIds: genreIds,
-                overview: overview ? this.shortenText(overview, MAX_OVERVIEW_LENGTH) : NO_OVERVIEW_TEXT,
-                releaseDate: releaseDate ? format(new Date(releaseDate), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT,
-                title: title ? this.shortenText(title, MAX_TITLE_LENGTH) : NO_TITLE_TEXT,
-                posterPath: posterPath ? `${POSTER_URL}${posterPath}` : defaultPoster,
-                popularity: popularity,
-              }
-              const updatedMovies = [...movies]
-              updatedMovies.push(movie)
-              return {
-                movies: updatedMovies,
-                loading: false,
-                error: false,
-                noMoviesFound: false,
-                totalPages: data.totalPages,
-              }
-            })
-          })
-        })
+        .getRatedMovies(this.state.guestSessionId)
+        .then((data) => this.setMoviesToState(data))
         .catch((errorContent) => {
           this.setState(() => {
             return {

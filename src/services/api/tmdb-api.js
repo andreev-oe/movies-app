@@ -1,7 +1,7 @@
 export default class TmdbApi {
   constructor() {
     this._apiKey = '7e43fdd420c8881bba08d1b8de759c71'
-    this.getMovies = async (keyWord, page) => {
+    this.getMovies = async (page = 1, keyWord) => {
       //TODO temporary this is the default value for fetch
       if (!keyWord) {
         keyWord = 'return'
@@ -18,7 +18,8 @@ export default class TmdbApi {
       const movies = await response.json()
       return this._transformMovies(movies)
     }
-    this.getRatedMovies = async (page, guestSessionId) => {
+    this.getRatedMovies = async (guestSessionId) => {
+      // TODO page?
       const response = await fetch(
         `https://api.themoviedb.org/3/guest_session/${guestSessionId}/rated/movies?api_key=${this._apiKey}`,
         {
