@@ -7,7 +7,7 @@ import { Consumer } from '../../services/movies-context/movies-context.jsx'
 const ERROR_MESSAGE = 'Sorry, content not loaded, check your internet connection and try to update page'
 const NO_MOVIES_MESSAGE = 'No movies found'
 
-export default class MoviesList extends React.Component {
+class MoviesList extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -67,3 +67,5 @@ export default class MoviesList extends React.Component {
     )
   }
 }
+
+export default MoviesList

@@ -1,7 +1,8 @@
 import React from 'react'
 import { Input } from 'antd'
+import PropTypes from 'prop-types'
 
-export default class SearchBar extends React.Component {
+class SearchBar extends React.Component {
   constructor(props) {
     super(props)
     this.debouncedRequest = this.debounce(this.props.getMovies, 1000)
@@ -28,3 +29,18 @@ export default class SearchBar extends React.Component {
     return <Input onChange={onChange} className={className} placeholder={placeholder} value={value} />
   }
 }
+
+SearchBar.defaultProps = {
+  onChange: () => {},
+  className: '',
+  value: '',
+  placeholder: '',
+}
+SearchBar.propTypes = {
+  onInputChange: PropTypes.func,
+  className: PropTypes.string,
+  value: PropTypes.string,
+  placeholder: PropTypes.string,
+}
+
+export default SearchBar
