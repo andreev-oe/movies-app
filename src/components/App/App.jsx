@@ -78,7 +78,6 @@ export default class App extends React.Component {
           movies: updatedMovies,
           loading: false,
           error: false,
-          noMoviesFound: false,
           totalPages: data.totalPages,
         }
       })
@@ -100,7 +99,7 @@ export default class App extends React.Component {
             return {
               movies: [],
               error: true,
-              noMoviesFound: false,
+              noMoviesFound: true,
               errorContent: errorContent.toString(),
               loading: false,
             }
@@ -124,7 +123,7 @@ export default class App extends React.Component {
             return {
               movies: [],
               error: true,
-              noMoviesFound: false,
+              noMoviesFound: true,
               errorContent: errorContent.toString(),
               loading: false,
             }
@@ -146,21 +145,47 @@ export default class App extends React.Component {
     return text
   }
   componentDidMount() {
-    this.moviesApi.createGuestSession().then((data) => {
-      this.setState({
-        guestSessionId: data.guestSessionId,
-      })
-      this.moviesApi.getGenres().then((data) => {
+    this.moviesApi
+      .createGuestSession()
+      .then((data) => {
         this.setState({
-          genres: data.genres,
+          guestSessionId: data.guestSessionId,
+        })
+        this.moviesApi
+          .getGenres()
+          .then((data) => {
+            this.setState({
+              genres: data.genres,
+            })
+          })
+          .catch((errorContent) => {
+            this.setState(() => {
+              return {
+                movies: [],
+                error: true,
+                noMoviesFound: true,
+                errorContent: errorContent.toString(),
+                loading: false,
+              }
+            })
+          })
+        this.getMovies()
+      })
+      .catch((errorContent) => {
+        this.setState(() => {
+          return {
+            movies: [],
+            error: true,
+            noMoviesFound: true,
+            errorContent: errorContent.toString(),
+            loading: false,
+          }
         })
       })
-      this.getMovies()
-    })
   }
 
   render() {
-    const { loading, totalPages } = this.state
+    const { movies, totalPages } = this.state
     const items = [
       {
         key: '1',
@@ -171,7 +196,6 @@ export default class App extends React.Component {
         label: 'Rated',
       },
     ]
-
     return (
       <div className="content-wrapper">
         <div className="page-content">
@@ -193,13 +217,15 @@ export default class App extends React.Component {
           >
             <MoviesList />
           </Provider>
-          <Pagination
-            pageSize={20}
-            defaultCurrent={1}
-            total={totalPages}
-            onChange={(page) => this.getMovies(page)}
-            className={`pagination loading-${loading}`}
-          />
+          {movies.length !== 0 ? (
+            <Pagination
+              pageSize={20}
+              defaultCurrent={1}
+              total={totalPages}
+              onChange={(page) => this.getMovies(page)}
+              className="pagination"
+            />
+          ) : null}
         </div>
       </div>
     )

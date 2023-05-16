@@ -140,9 +140,6 @@ body {
     margin-top: 32px;
     height: 40px;
 }
-.loading-true {
-    display: none;
-}
 .ant-rate {
     font-size: 15px;
 }

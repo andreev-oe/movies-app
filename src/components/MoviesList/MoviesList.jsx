@@ -6,6 +6,7 @@ import { Consumer } from '../../services/movies-context/movies-context.jsx'
 
 const ERROR_MESSAGE = 'Sorry, content not loaded, check your internet connection and try to update page'
 const NO_MOVIES_MESSAGE = 'No movies found'
+const NO_RATED_MOVIES_MESSAGE = 'No rated movies'
 
 class MoviesList extends React.Component {
   constructor(props) {
@@ -32,7 +33,7 @@ class MoviesList extends React.Component {
   render() {
     return (
       <Consumer>
-        {({ state: { movies, loading, error, noMoviesFound, errorContent } }) => {
+        {({ state: { movies, loading, error, noMoviesFound, searchTabOpened, errorContent } }) => {
           const hasData = !(loading && error)
           const spinner = loading ? (
             <div className="spinner-container">
@@ -51,7 +52,12 @@ class MoviesList extends React.Component {
             />
           ) : null
           const noMoviesMessage = noMoviesFound ? (
-            <Alert showIcon type={'info'} className="error-message" message={NO_MOVIES_MESSAGE} />
+            <Alert
+              showIcon
+              type={'info'}
+              className="error-message"
+              message={searchTabOpened ? NO_MOVIES_MESSAGE : NO_RATED_MOVIES_MESSAGE}
+            />
           ) : null
           const content = hasData ? this.showMoviesCards(movies) : null
           return (
