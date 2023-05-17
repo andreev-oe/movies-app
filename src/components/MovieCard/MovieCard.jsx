@@ -6,14 +6,14 @@ import { Consumer } from '../../services/movies-context/movies-context.jsx'
 const POSTER_WIDTH = 183
 const POSTER_HEIGHT = 281
 
-const setColor = (popularity) => {
-  if (popularity < 3) {
+const setColor = (voteAverage) => {
+  if (voteAverage < 3) {
     return 'bad'
   }
-  if (popularity >= 3 && popularity < 5) {
+  if (voteAverage >= 3 && voteAverage < 5) {
     return 'average'
   }
-  if (popularity >= 5 && popularity < 7) {
+  if (voteAverage >= 5 && voteAverage < 7) {
     return 'good'
   }
   return 'great'
@@ -31,7 +31,7 @@ const showMovieGenres = (movieGenresIds, genres) => {
     </p>
   ))
 }
-const MovieCard = ({ id, overview, releaseDate, title, posterPath, popularity, genreIds }) => {
+const MovieCard = ({ id, overview, releaseDate, title, posterPath, voteAverage, rating, genreIds }) => {
   return (
     <Consumer>
       {({ state: { genres, guestSessionId }, addRating }) => {
@@ -55,9 +55,10 @@ const MovieCard = ({ id, overview, releaseDate, title, posterPath, popularity, g
                   addRating(value, id, guestSessionId)
                 }}
                 count={10}
+                defaultValue={rating}
               />
-              <div className={`movie-card__rating movie-card__rating--${setColor(popularity)}`}>
-                <p className="movie-card__rating--popularity">{popularity.toFixed(1)}</p>
+              <div className={`movie-card__rating movie-card__rating--${setColor(voteAverage)}`}>
+                <p className="movie-card__rating--popularity">{voteAverage.toFixed(1)}</p>
               </div>
             </div>
           </div>

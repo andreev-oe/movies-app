@@ -113,14 +113,13 @@ export default class App extends React.Component {
     })
     if (!data.length) {
       this.setState({
-        movies: [],
         noMoviesFound: true,
         loading: false,
         error: false,
       })
     }
     let updatedMovies = []
-    data.forEach(({ id, genreIds, overview, releaseDate, title, posterPath, popularity }) => {
+    data.forEach(({ id, genreIds, overview, releaseDate, title, posterPath, voteAverage, rating }) => {
       const movie = {
         id: id,
         genreIds: genreIds,
@@ -128,9 +127,27 @@ export default class App extends React.Component {
         releaseDate: releaseDate ? format(new Date(releaseDate), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT,
         title: title ? shortenText(title, MAX_TITLE_LENGTH) : NO_TITLE_TEXT,
         posterPath: posterPath ? `${POSTER_URL}${posterPath}` : defaultPoster,
-        popularity: popularity,
+        voteAverage: voteAverage,
+        rating: rating,
       }
       updatedMovies.push(movie)
+    })
+    this.moviesApi.getRatedMovies(this.state.guestSessionId).then((data) => {
+      let updatedRatedMovies = []
+      data.forEach(({ id, rating }) => {
+        const movie = {
+          id: id,
+          rating: rating,
+        }
+        updatedRatedMovies.push(movie)
+      })
+      updatedRatedMovies.forEach((ratedMovie) => {
+        updatedMovies.forEach((updatedMovie) => {
+          if (ratedMovie.id === updatedMovie.id) {
+            updatedMovie.rating = ratedMovie.rating
+          }
+        })
+      })
     })
     this.setState(() => {
       return {
@@ -202,7 +219,13 @@ export default class App extends React.Component {
     return (
       <div className="content-wrapper">
         <div className="page-content">
-          <Tabs centered defaultActiveKey="1" items={TABS} onChange={(key) => this.switchTab(key)} />
+          <Tabs
+            destroyInactiveTabPane={true}
+            centered
+            defaultActiveKey="1"
+            items={TABS}
+            onChange={(key) => this.switchTab(key)}
+          />
           {this.state.searchTabOpened ? (
             <SearchBar
               onChange={this.onInput}

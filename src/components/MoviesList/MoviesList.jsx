@@ -9,8 +9,7 @@ const NO_MOVIES_MESSAGE = 'No movies found'
 const NO_RATED_MOVIES_MESSAGE = 'No rated movies'
 
 const showMoviesCards = (movies) => {
-  //TODO too many paintings, look items then map goes through the loop
-  return movies.map(({ id, genreIds, overview, releaseDate, title, posterPath, popularity }) => {
+  return movies.map(({ id, genreIds, overview, releaseDate, title, posterPath, rating, voteAverage }) => {
     return (
       <MovieCard
         key={id}
@@ -19,8 +18,9 @@ const showMoviesCards = (movies) => {
         releaseDate={releaseDate}
         title={title}
         posterPath={posterPath}
-        popularity={popularity}
+        voteAverage={voteAverage}
         genreIds={genreIds}
+        rating={rating}
       />
     )
   })
@@ -47,14 +47,15 @@ const MoviesList = () => {
             description={`Description - ${errorContent}`}
           />
         ) : null
-        const noMoviesMessage = noMoviesFound ? (
-          <Alert
-            showIcon
-            type={'info'}
-            className="error-message"
-            message={searchTabOpened ? NO_MOVIES_MESSAGE : NO_RATED_MOVIES_MESSAGE}
-          />
-        ) : null
+        const noMoviesMessage =
+          noMoviesFound && !error ? (
+            <Alert
+              showIcon
+              type={'info'}
+              className="error-message"
+              message={searchTabOpened ? NO_MOVIES_MESSAGE : NO_RATED_MOVIES_MESSAGE}
+            />
+          ) : null
         const content = hasData ? showMoviesCards(movies) : null
         return (
           <div className="movies">
