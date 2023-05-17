@@ -8,13 +8,18 @@ import defaultPoster from '../../img/default-poster.jpg'
 import { SearchBar } from '../SearchBar/index.js'
 import { MoviesList } from '../MoviesList/index.js'
 
+const PAGE_SIZE = 20
+const tabKey = {
+  SEARCH: 'search',
+  RATED: 'rated',
+}
 const TABS = [
   {
-    key: '1',
+    key: tabKey.SEARCH,
     label: 'Search',
   },
   {
-    key: '2',
+    key: tabKey.RATED,
     label: 'Rated',
   },
 ]
@@ -51,7 +56,7 @@ export default class App extends React.Component {
       searchTabOpened: true,
       currentPage: 1,
     }
-    this.moviesApi = new TmdbApi()
+    this.moviesApi = new TmdbApi('7e43fdd420c8881bba08d1b8de759c71')
     this.onInput = this.onInput.bind(this)
     this.getMovies = this.getMovies.bind(this)
     this.getRatedMovies = this.getRatedMovies.bind(this)
@@ -67,7 +72,7 @@ export default class App extends React.Component {
       }
     })
     this.moviesApi
-      .getMovies(page, this.state.searchText)
+      .getMovies(this.state.searchText, page)
       .then((data) => this.setMoviesToState(data, page))
       .catch((errorContent) => {
         this.setState(() => {
@@ -96,7 +101,7 @@ export default class App extends React.Component {
       }
     })
     this.moviesApi
-      .getRatedMovies(page, this.state.guestSessionId)
+      .getRatedMovies(this.state.guestSessionId, page)
       .then((data) => this.setMoviesToState(data, page))
       .catch((errorContent) => {
         this.setState(() => {
@@ -116,7 +121,7 @@ export default class App extends React.Component {
         noMoviesFound: true,
         loading: false,
         error: false,
-        currentPage: 1,
+        currentPage: page,
       })
     }
     let updatedMovies = []
@@ -133,7 +138,7 @@ export default class App extends React.Component {
       }
       updatedMovies.push(movie)
     })
-    this.moviesApi.getRatedMovies(page, this.state.guestSessionId).then((ratedMovies) => {
+    this.moviesApi.getRatedMovies(this.state.guestSessionId).then((ratedMovies) => {
       let updatedRatedMovies = []
       ratedMovies.forEach(({ id, rating }) => {
         const movie = {
@@ -161,7 +166,7 @@ export default class App extends React.Component {
     })
   }
   switchTab(key) {
-    if (key === '1') {
+    if (key === tabKey.SEARCH) {
       this.getMovies()
       this.setState(() => {
         return {
@@ -224,7 +229,7 @@ export default class App extends React.Component {
           <Tabs
             destroyInactiveTabPane={true}
             centered
-            defaultActiveKey="1"
+            defaultActiveKey={tabKey.SEARCH}
             items={TABS}
             onChange={(key) => this.switchTab(key)}
           />
@@ -246,7 +251,7 @@ export default class App extends React.Component {
             <MoviesList />
           </Provider>
           <Pagination
-            pageSize={20}
+            pageSize={PAGE_SIZE}
             current={currentPage}
             total={totalResults}
             onChange={searchTabOpened ? (page) => this.getMovies(page) : (page) => this.getRatedMovies(page)}

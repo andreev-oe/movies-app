@@ -2,6 +2,8 @@ import React from 'react'
 import { Input } from 'antd'
 import PropTypes from 'prop-types'
 
+const DEBOUNCE_TIME = 1000
+
 const debounce = (fn, debounceTime) => {
   let debounceTimer
   return function (...data) {
@@ -17,7 +19,7 @@ const debounce = (fn, debounceTime) => {
 class SearchBar extends React.Component {
   constructor(props) {
     super(props)
-    this.debouncedRequest = debounce(this.props.getMovies, 1000)
+    this.debouncedRequest = debounce(this.props.getMovies, DEBOUNCE_TIME)
   }
   componentDidUpdate(prevProps) {
     if (prevProps.value !== this.props.value) {

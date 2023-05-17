@@ -5,18 +5,31 @@ import { Consumer } from '../../services/movies-context/movies-context.jsx'
 
 const POSTER_WIDTH = 183
 const POSTER_HEIGHT = 281
+const STARS_COUNT = 10
+const DIGITS_AFTER_COMMA = 1
+const ratingScore = {
+  BAD: 3,
+  AVERAGE: 5,
+  GOOD: 7,
+}
+const ratingScoreCss = {
+  BAD: 'bad',
+  AVERAGE: 'average',
+  GOOD: 'good',
+  GREAT: 'great',
+}
 
 const setColor = (voteAverage) => {
-  if (voteAverage < 3) {
-    return 'bad'
+  if (voteAverage < ratingScore.BAD) {
+    return ratingScoreCss.BAD
   }
-  if (voteAverage >= 3 && voteAverage < 5) {
-    return 'average'
+  if (voteAverage >= ratingScore.BAD && voteAverage < ratingScore.AVERAGE) {
+    return ratingScoreCss.AVERAGE
   }
-  if (voteAverage >= 5 && voteAverage < 7) {
-    return 'good'
+  if (voteAverage >= ratingScore.AVERAGE && voteAverage < ratingScore.GOOD) {
+    return ratingScoreCss.GOOD
   }
-  return 'great'
+  return ratingScoreCss.GREAT
 }
 const showMovieGenres = (movieGenresIds, genres) => {
   const movieGenres = movieGenresIds.map((movieGenreId) => {
@@ -54,11 +67,11 @@ const MovieCard = ({ id, overview, releaseDate, title, posterPath, voteAverage, 
                 onChange={(value) => {
                   addRating(value, id, guestSessionId)
                 }}
-                count={10}
+                count={STARS_COUNT}
                 defaultValue={rating}
               />
               <div className={`movie-card__rating movie-card__rating--${setColor(voteAverage)}`}>
-                <p className="movie-card__rating--popularity">{voteAverage.toFixed(1)}</p>
+                <p className="movie-card__rating--popularity">{voteAverage.toFixed(DIGITS_AFTER_COMMA)}</p>
               </div>
             </div>
           </div>
