@@ -40,7 +40,7 @@ export default class App extends React.Component {
     super(props)
     this.state = {
       movies: [],
-      totalPages: 0,
+      totalResults: 0,
       loading: true,
       error: false,
       noMoviesFound: false,
@@ -54,8 +54,9 @@ export default class App extends React.Component {
     this.moviesApi = new TmdbApi()
     this.onInput = this.onInput.bind(this)
     this.getMovies = this.getMovies.bind(this)
+    this.getRatedMovies = this.getRatedMovies.bind(this)
   }
-  getMovies(page) {
+  getMovies(page = 1) {
     this.setState(() => {
       return {
         movies: [],
@@ -85,7 +86,7 @@ export default class App extends React.Component {
       searchText: evt.target.value,
     })
   }
-  getRatedMovies() {
+  getRatedMovies(page = 1) {
     this.setState(() => {
       return {
         movies: [],
@@ -95,8 +96,8 @@ export default class App extends React.Component {
       }
     })
     this.moviesApi
-      .getRatedMovies(this.state.guestSessionId)
-      .then((data) => this.setMoviesToState(data))
+      .getRatedMovies(page, this.state.guestSessionId)
+      .then((data) => this.setMoviesToState(data, page))
       .catch((errorContent) => {
         this.setState(() => {
           return {
@@ -132,7 +133,7 @@ export default class App extends React.Component {
       }
       updatedMovies.push(movie)
     })
-    this.moviesApi.getRatedMovies(this.state.guestSessionId).then((ratedMovies) => {
+    this.moviesApi.getRatedMovies(page, this.state.guestSessionId).then((ratedMovies) => {
       let updatedRatedMovies = []
       ratedMovies.forEach(({ id, rating }) => {
         const movie = {
@@ -153,7 +154,7 @@ export default class App extends React.Component {
           movies: updatedMovies,
           loading: false,
           error: false,
-          totalPages: data.totalPages,
+          totalResults: data.totalResults,
           currentPage: page,
         }
       })
@@ -216,7 +217,7 @@ export default class App extends React.Component {
       })
   }
   render() {
-    const { movies, totalPages, currentPage } = this.state
+    const { movies, totalResults, currentPage, searchTabOpened } = this.state
     return (
       <div className="content-wrapper">
         <div className="page-content">
@@ -227,7 +228,7 @@ export default class App extends React.Component {
             items={TABS}
             onChange={(key) => this.switchTab(key)}
           />
-          {this.state.searchTabOpened ? (
+          {searchTabOpened ? (
             <SearchBar
               onChange={this.onInput}
               getMovies={this.getMovies}
@@ -247,8 +248,8 @@ export default class App extends React.Component {
           <Pagination
             pageSize={20}
             current={currentPage}
-            total={totalPages}
-            onChange={(page) => this.getMovies(page)}
+            total={totalResults}
+            onChange={searchTabOpened ? (page) => this.getMovies(page) : (page) => this.getRatedMovies(page)}
             className={`pagination ${movies.length ? '' : 'js-hidden'}`}
           />
         </div>
