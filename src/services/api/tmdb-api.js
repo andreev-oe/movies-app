@@ -4,7 +4,7 @@ export default class TmdbApi {
     this.getMovies = async (page = 1, keyWord) => {
       //TODO temporary this is the default value for fetch
       if (!keyWord) {
-        keyWord = 'return'
+        keyWord = 'qwe'
       }
       const response = await fetch(
         `https://api.themoviedb.org/3/search/movie?api_key=${this._apiKey}&language=en-US&query=${keyWord}&page=${page}&include_adult=false`,

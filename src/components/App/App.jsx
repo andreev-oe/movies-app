@@ -108,9 +108,6 @@ export default class App extends React.Component {
       })
   }
   setMoviesToState(data) {
-    this.setState({
-      movies: [],
-    })
     if (!data.length) {
       this.setState({
         noMoviesFound: true,
@@ -148,14 +145,14 @@ export default class App extends React.Component {
           }
         })
       })
-    })
-    this.setState(() => {
-      return {
-        movies: updatedMovies,
-        loading: false,
-        error: false,
-        totalPages: data.totalPages,
-      }
+      this.setState(() => {
+        return {
+          movies: updatedMovies,
+          loading: false,
+          error: false,
+          totalPages: data.totalPages,
+        }
+      })
     })
   }
   switchTab(key) {
