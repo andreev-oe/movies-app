@@ -49,6 +49,7 @@ export default class App extends React.Component {
       guestSessionId: null,
       genres: [],
       searchTabOpened: true,
+      currentPage: 1,
     }
     this.moviesApi = new TmdbApi()
     this.onInput = this.onInput.bind(this)
@@ -61,11 +62,12 @@ export default class App extends React.Component {
         noMoviesFound: false,
         error: false,
         loading: true,
+        currentPage: page,
       }
     })
     this.moviesApi
       .getMovies(page, this.state.searchText)
-      .then((data) => this.setMoviesToState(data))
+      .then((data) => this.setMoviesToState(data, page))
       .catch((errorContent) => {
         this.setState(() => {
           return {
@@ -107,12 +109,13 @@ export default class App extends React.Component {
         })
       })
   }
-  setMoviesToState(data) {
+  setMoviesToState(data, page = 1) {
     if (!data.length) {
       this.setState({
         noMoviesFound: true,
         loading: false,
         error: false,
+        currentPage: 1,
       })
     }
     let updatedMovies = []
@@ -129,9 +132,9 @@ export default class App extends React.Component {
       }
       updatedMovies.push(movie)
     })
-    this.moviesApi.getRatedMovies(this.state.guestSessionId).then((data) => {
+    this.moviesApi.getRatedMovies(this.state.guestSessionId).then((ratedMovies) => {
       let updatedRatedMovies = []
-      data.forEach(({ id, rating }) => {
+      ratedMovies.forEach(({ id, rating }) => {
         const movie = {
           id: id,
           rating: rating,
@@ -151,6 +154,7 @@ export default class App extends React.Component {
           loading: false,
           error: false,
           totalPages: data.totalPages,
+          currentPage: page,
         }
       })
     })
@@ -212,7 +216,7 @@ export default class App extends React.Component {
       })
   }
   render() {
-    const { movies, totalPages } = this.state
+    const { movies, totalPages, currentPage } = this.state
     return (
       <div className="content-wrapper">
         <div className="page-content">
@@ -242,7 +246,7 @@ export default class App extends React.Component {
           </Provider>
           <Pagination
             pageSize={20}
-            defaultCurrent={1}
+            current={currentPage}
             total={totalPages}
             onChange={(page) => this.getMovies(page)}
             className={`pagination ${movies.length ? '' : 'js-hidden'}`}
