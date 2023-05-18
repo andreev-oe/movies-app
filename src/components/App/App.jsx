@@ -26,7 +26,7 @@ const TABS = [
 
 const MAX_OVERVIEW_LENGTH = 180
 const MIN_OVERVIEW_LENGTH = 140
-const MAX_TITLE_LENGTH = 30
+const MAX_TITLE_LENGTH = 25
 const MIN_TITLE_LENGTH = 20
 const NO_RELEASE_DATE_TEXT = 'Release date unknown'
 const NO_OVERVIEW_TEXT = 'This movie has no description'
