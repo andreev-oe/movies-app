@@ -1,0 +1,10 @@
+.husky
+build
+node_modules
+public
+/.git
+/.idea
+**/*.json
+**/*.gitignore
+**/*.prettierrc
+**/*.md
