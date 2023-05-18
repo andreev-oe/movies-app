@@ -24,14 +24,16 @@ const TABS = [
   },
 ]
 
-const MAX_OVERVIEW_LENGTH = 180
+const MAX_OVERVIEW_LENGTH = 170
 const MIN_OVERVIEW_LENGTH = 140
 const MAX_TITLE_LENGTH = 25
 const MIN_TITLE_LENGTH = 20
+const DATE_FORMAT = 'MMMM d, yyyy'
 const NO_RELEASE_DATE_TEXT = 'Release date unknown'
 const NO_OVERVIEW_TEXT = 'This movie has no description'
 const NO_TITLE_TEXT = 'This movie has no title'
 const POSTER_URL = 'https://image.tmdb.org/t/p/w500'
+const API_KEY = '7e43fdd420c8881bba08d1b8de759c71'
 
 const shortenText = (text, maxLength) => {
   if (text.length > maxLength) {
@@ -58,7 +60,7 @@ export default class App extends React.Component {
       searchTabOpened: true,
       currentPage: 1,
     }
-    this.moviesApi = new TmdbApi('7e43fdd420c8881bba08d1b8de759c71')
+    this.moviesApi = new TmdbApi(API_KEY)
     this.onInput = this.onInput.bind(this)
     this.getMovies = this.getMovies.bind(this)
     this.getRatedMovies = this.getRatedMovies.bind(this)
@@ -138,7 +140,7 @@ export default class App extends React.Component {
         id: id,
         genreIds: genreIds,
         overview: shortenOverview ? shortenOverview : NO_OVERVIEW_TEXT,
-        releaseDate: releaseDate ? format(new Date(releaseDate), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT,
+        releaseDate: releaseDate ? format(new Date(releaseDate), DATE_FORMAT) : NO_RELEASE_DATE_TEXT,
         title: title ? shortenText(title, MAX_TITLE_LENGTH) : NO_TITLE_TEXT,
         posterPath: posterPath ? `${POSTER_URL}${posterPath}` : defaultPoster,
         voteAverage: voteAverage,
