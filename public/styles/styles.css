@@ -34,40 +34,53 @@ body {
     font-weight: 400;
 }
 .movie-card {
-    position: relative;
-    display: flex;
+    /*position: relative;*/
+    /*display: flex;*/
     width: 454px;
     height: 281px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     transition-duration: 0.2s;
+    display: grid;
+    gap: 12px 20px;
+    justify-content: start;
+    grid-template-rows: auto 20px 20px auto auto;
+    grid-template-columns: 183px 1fr 40px ;
+    grid-template-areas:
+            'poster title votes'
+            'poster date votes'
+            'poster genres genres'
+            'poster overview overview'
+            'poster rating rating';
 }
 .movie-card:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 .movie-card__poster {
     object-fit: cover;
-}
-.movie-card__info {
-    margin: 12px 20px;
+    grid-area: poster;
 }
 .movie-card__title {
-    margin: 0;
+    margin: 12px 0 0;
     font-weight: 400;
     font-size: 20px;
     line-height: 28px;
+    grid-area: title;
 }
 .movie-card__date {
     color: #827E7E;
     font-size: 12px;
     line-height: 22px;
-    margin: 7px 0 0 0;
+    margin: 0;
+    grid-area: date;
 }
 .movie-card__genres {
     display: flex;
+    overflow: hidden;
     gap: 8px;
+    grid-area: genres;
 }
 .movie-card__genres--genre {
-    margin: 7px 0 0 0;
+    margin: 0;
     background: #FAFAFA;
     border: 1px solid #D9D9D9;
     border-radius: 2px;
@@ -77,14 +90,14 @@ body {
     padding: 2px 5px;
 }
 .movie-card__description {
-    margin: 7px 0 0 0;
+    margin: 0;
+    padding-right: 20px;
     font-size: 12px;
     line-height: 22px;
+    grid-area: overview;
 }
 .movie-card__rating {
-    position: absolute;
-    top: 12px;
-    right: 9px;
+    margin: 12px 9px 0 0;
     border-width: 2px;
     border-style: solid;
     border-radius: 50%;
@@ -93,6 +106,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    grid-area: votes;
+}
+.movie-card__user-rating {
+    align-self: end;
+    margin: 0 auto 16px;
+    grid-area: rating;
 }
 .movie-card__rating--bad {
     border-color: #E90000;

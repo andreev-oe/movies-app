@@ -24,8 +24,10 @@ const TABS = [
   },
 ]
 
-const MAX_OVERVIEW_LENGTH = 200
-const MAX_TITLE_LENGTH = 45
+const MAX_OVERVIEW_LENGTH = 190
+const MIN_OVERVIEW_LENGTH = 150
+const MAX_TITLE_LENGTH = 36
+const MIN_TITLE_LENGTH = 20
 const NO_RELEASE_DATE_TEXT = 'Release date unknown'
 const NO_OVERVIEW_TEXT = 'This movie has no description'
 const NO_TITLE_TEXT = 'This movie has no title'
@@ -126,10 +128,16 @@ export default class App extends React.Component {
     }
     let updatedMovies = []
     data.forEach(({ id, genreIds, overview, releaseDate, title, posterPath, voteAverage, rating }) => {
+      let shortenOverview
+      if (title.length >= MIN_TITLE_LENGTH) {
+        shortenOverview = shortenText(overview, MIN_OVERVIEW_LENGTH)
+      } else {
+        shortenOverview = shortenText(overview, MAX_OVERVIEW_LENGTH)
+      }
       const movie = {
         id: id,
         genreIds: genreIds,
-        overview: overview ? shortenText(overview, MAX_OVERVIEW_LENGTH) : NO_OVERVIEW_TEXT,
+        overview: shortenOverview ? shortenOverview : NO_OVERVIEW_TEXT,
         releaseDate: releaseDate ? format(new Date(releaseDate), 'MMMM d, yyyy') : NO_RELEASE_DATE_TEXT,
         title: title ? shortenText(title, MAX_TITLE_LENGTH) : NO_TITLE_TEXT,
         posterPath: posterPath ? `${POSTER_URL}${posterPath}` : defaultPoster,
@@ -264,6 +272,7 @@ export default class App extends React.Component {
             <MoviesList />
           </Provider>
           <Pagination
+            showSizeChanger={false}
             pageSize={PAGE_SIZE}
             current={currentPage}
             total={totalResults}

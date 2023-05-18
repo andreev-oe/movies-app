@@ -58,22 +58,21 @@ const MovieCard = ({ id, overview, releaseDate, title, posterPath, voteAverage, 
               width={POSTER_WIDTH}
               height={POSTER_HEIGHT}
             />
-            <div className="movie-card__info">
-              <h2 className="movie-card__title">{title}</h2>
-              <p className="movie-card__date">{releaseDate}</p>
-              <div className="movie-card__genres">{showMovieGenres(genreIds, genres)}</div>
-              <p className="movie-card__description">{overview}</p>
-              <Rate
-                allowHalf
-                onChange={(value) => {
-                  addRating(value, id, guestSessionId)
-                }}
-                count={STARS_COUNT}
-                defaultValue={rating}
-              />
-              <div className={`movie-card__rating movie-card__rating--${setColor(voteAverage)}`}>
-                <p className="movie-card__rating--popularity">{voteAverage.toFixed(DIGITS_AFTER_COMMA)}</p>
-              </div>
+            <h2 className="movie-card__title">{title}</h2>
+            <p className="movie-card__date">{releaseDate}</p>
+            <div className="movie-card__genres">{showMovieGenres(genreIds, genres)}</div>
+            <p className="movie-card__description">{overview}</p>
+            <Rate
+              className="movie-card__user-rating"
+              allowHalf
+              onChange={(value) => {
+                addRating(value, id, guestSessionId)
+              }}
+              count={STARS_COUNT}
+              defaultValue={rating}
+            />
+            <div className={`movie-card__rating movie-card__rating--${setColor(voteAverage)}`}>
+              <p className="movie-card__rating--popularity">{voteAverage.toFixed(DIGITS_AFTER_COMMA)}</p>
             </div>
           </div>
         )
