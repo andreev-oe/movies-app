@@ -1,5 +1,6 @@
 import React from 'react'
 import { Rate } from 'antd'
+import PropTypes from 'prop-types'
 
 import { Consumer } from '../../services/movies-context/movies-context.jsx'
 
@@ -79,6 +80,28 @@ const MovieCard = ({ id, overview, releaseDate, title, posterPath, voteAverage, 
       }}
     </Consumer>
   )
+}
+
+MovieCard.defaultProps = {
+  id: 0,
+  overview: '',
+  releaseDate: '',
+  title: '',
+  posterPath: '',
+  voteAverage: 0,
+  rating: 0,
+  genreIds: [0],
+}
+
+MovieCard.propTypes = {
+  id: PropTypes.number,
+  overview: PropTypes.string,
+  releaseDate: PropTypes.string,
+  title: PropTypes.string,
+  posterPath: PropTypes.string,
+  voteAverage: PropTypes.number,
+  rating: PropTypes.number,
+  genreIds: PropTypes.arrayOf(PropTypes.number),
 }
 
 export default MovieCard

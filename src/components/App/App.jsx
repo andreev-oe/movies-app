@@ -138,32 +138,45 @@ export default class App extends React.Component {
       }
       updatedMovies.push(movie)
     })
-    this.moviesApi.getRatedMovies(this.state.guestSessionId).then((ratedMovies) => {
-      let updatedRatedMovies = []
-      ratedMovies.forEach(({ id, rating }) => {
-        const movie = {
-          id: id,
-          rating: rating,
-        }
-        updatedRatedMovies.push(movie)
-      })
-      updatedRatedMovies.forEach((ratedMovie) => {
-        updatedMovies.forEach((updatedMovie) => {
-          if (ratedMovie.id === updatedMovie.id) {
-            updatedMovie.rating = ratedMovie.rating
+    this.moviesApi
+      .getRatedMovies(this.state.guestSessionId)
+      .then((ratedMovies) => {
+        let updatedRatedMovies = []
+        ratedMovies.forEach(({ id, rating }) => {
+          const movie = {
+            id: id,
+            rating: rating,
+          }
+          updatedRatedMovies.push(movie)
+        })
+        updatedRatedMovies.forEach((ratedMovie) => {
+          updatedMovies.forEach((updatedMovie) => {
+            if (ratedMovie.id === updatedMovie.id) {
+              updatedMovie.rating = ratedMovie.rating
+            }
+          })
+        })
+        this.setState(() => {
+          return {
+            movies: updatedMovies,
+            loading: false,
+            error: false,
+            totalResults: data.totalResults,
+            currentPage: page,
           }
         })
       })
-      this.setState(() => {
-        return {
-          movies: updatedMovies,
-          loading: false,
-          error: false,
-          totalResults: data.totalResults,
-          currentPage: page,
-        }
+      .catch(() => {
+        this.setState(() => {
+          return {
+            movies: updatedMovies,
+            loading: false,
+            error: false,
+            totalResults: data.totalResults,
+            currentPage: page,
+          }
+        })
       })
-    })
   }
   switchTab(key) {
     if (key === tabKey.SEARCH) {
