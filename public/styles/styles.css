@@ -37,8 +37,9 @@ body {
     font-weight: 400;
 }
 .movie-card {
+    box-sizing: border-box;
     padding: 0 0 10px 10px;
-    width: 387px;
+    width: 100%;
     min-width: 387px;
     height: 245px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
