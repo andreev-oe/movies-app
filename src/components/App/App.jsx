@@ -2,9 +2,9 @@ import React from 'react'
 import { format } from 'date-fns'
 import { Pagination, Tabs } from 'antd'
 
-import { Provider } from '../../services/movies-context/movies-context.jsx'
-import TmdbApi from '../../services/api/tmdb-api.js'
-import defaultPoster from '../../img/default-poster.jpg'
+import { Provider } from '../../context/movies-context.jsx'
+import TmdbApi from '../../services/tmdb-api.js'
+import defaultPoster from '../../assets/images/default-poster.jpg'
 import { SearchBar } from '../SearchBar/index.js'
 import { MoviesList } from '../MoviesList/index.js'
 
@@ -261,7 +261,6 @@ export default class App extends React.Component {
               onChange={this.onInput}
               getMovies={this.getMovies}
               className="search-field"
-              placeholder={'Type here to search...'}
               value={this.state.searchText}
             />
           ) : null}

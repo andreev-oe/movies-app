@@ -2,7 +2,7 @@ import React from 'react'
 import { Rate } from 'antd'
 import PropTypes from 'prop-types'
 
-import { Consumer } from '../../services/movies-context/movies-context.jsx'
+import { Consumer } from '../../context/movies-context.jsx'
 
 const POSTER_WIDTH = 183
 const POSTER_HEIGHT = 281

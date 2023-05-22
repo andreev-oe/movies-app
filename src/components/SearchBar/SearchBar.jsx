@@ -3,6 +3,7 @@ import { Input } from 'antd'
 import PropTypes from 'prop-types'
 
 const DEBOUNCE_TIME = 1000
+const SEARCH_PLACEHOLDER = 'Type to search...'
 
 const debounce = (fn, debounceTime) => {
   let debounceTimer
@@ -27,8 +28,8 @@ class SearchBar extends React.Component {
     }
   }
   render() {
-    const { onChange, className, value, placeholder } = this.props
-    return <Input onChange={onChange} className={className} placeholder={placeholder} value={value} />
+    const { onChange, className, value } = this.props
+    return <Input onChange={onChange} className={className} placeholder={SEARCH_PLACEHOLDER} value={value} />
   }
 }
 

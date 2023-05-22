@@ -1,6 +1,7 @@
 export default class TmdbApi {
   constructor(apiKey) {
     this._apiKey = apiKey
+    this._baseUrl = 'https://api.themoviedb.org/3/'
     this._getRequestOptions = {
       method: 'GET',
     }
@@ -11,7 +12,7 @@ export default class TmdbApi {
       keyWord = 'great'
     }
     const response = await fetch(
-      `https://api.themoviedb.org/3/search/movie?api_key=${this._apiKey}&language=en-US&query=${keyWord}&page=${page}&include_adult=false`,
+      `${this._baseUrl}search/movie?api_key=${this._apiKey}&language=en-US&query=${keyWord}&page=${page}&include_adult=false`,
       this._getRequestOptions
     )
     this._checkResponse(response)
@@ -20,7 +21,7 @@ export default class TmdbApi {
   }
   async getRatedMovies(guestSessionId, page = 1) {
     const response = await fetch(
-      `https://api.themoviedb.org/3/guest_session/${guestSessionId}/rated/movies?api_key=${this._apiKey}&page=${page}`,
+      `${this._baseUrl}guest_session/${guestSessionId}/rated/movies?api_key=${this._apiKey}&page=${page}`,
       this._getRequestOptions
     )
     this._checkResponse(response)
@@ -29,7 +30,7 @@ export default class TmdbApi {
   }
   async addRating(rating, movieId, guestSessionId) {
     const response = await fetch(
-      `https://api.themoviedb.org/3/movie/${movieId}/rating?api_key=${this._apiKey}&guest_session_id=${guestSessionId}`,
+      `${this._baseUrl}movie/${movieId}/rating?api_key=${this._apiKey}&guest_session_id=${guestSessionId}`,
       {
         method: 'POST',
         headers: {
@@ -43,7 +44,7 @@ export default class TmdbApi {
   }
   async createGuestSession() {
     const response = await fetch(
-      `https://api.themoviedb.org/3/authentication/guest_session/new?api_key=${this._apiKey}`,
+      `${this._baseUrl}authentication/guest_session/new?api_key=${this._apiKey}`,
       this._getRequestOptions
     )
     this._checkResponse(response)
@@ -52,7 +53,7 @@ export default class TmdbApi {
   }
   async getGenres() {
     const response = await fetch(
-      `https://api.themoviedb.org/3/genre/movie/list?api_key=${this._apiKey}&language=en-US`,
+      `${this._baseUrl}genre/movie/list?api_key=${this._apiKey}&language=en-US`,
       this._getRequestOptions
     )
     this._checkResponse(response)
